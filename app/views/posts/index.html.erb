@@ -2,6 +2,7 @@
 <table class="table">
 <tr>
     <th>Score</th>
+    <th>Vote</th>
     <th>Title</th>
     <th>User</th>
     <th>Posted</th>
@@ -10,11 +11,16 @@
 <% if @posts.any? %>
     <% @posts.each do |post| %>
         <tr>
-            <td>0</td>
+            <td><%= post.votes.length %></td>
+            <% if post.votes.where(user_id:@current_user['id']).any? %>
+            <td><%= link_to('<i class="glyphicon glyphicon-collapse-up" style="color:red"></i>'.html_safe, post_vote_path(post), :method => :post) %></td>
+            <% else %>
+            <td><%= link_to('<i class="glyphicon glyphicon-collapse-up"></i>'.html_safe, post_vote_path(post), :method => :post) %></td>
+            <% end %>
             <td><%= link_to post.title,post.link, :target=>'_blank' %></td>
             <td><%= post.user ? post.user.name : 'Unknown' %></td>
             <td><%= format_creation_time post %> </td>
-            <td>0</td>
+            <td><%= link_to "Comment", post_comments_path(post), :class => "btn btn-primary btn-xs" %></td>
         </tr>
     <% end %>
 <% else %>
